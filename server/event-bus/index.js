@@ -8,8 +8,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+const events = [];
+
 app.post('/events', (req, res) => {
   const event = req.body;
+  events.push(event);
   axios
     .post('http://localhost:4000/events', event)
     .catch((e) => console.log(e));
@@ -19,8 +22,19 @@ app.post('/events', (req, res) => {
   axios
     .post('http://localhost:4002/events', event)
     .catch((e) => console.log(e));
+  axios
+    .post('http://localhost:4003/events', event)
+    .catch((e) => console.log(e));
 
   res.send({ status: 'OK' });
+});
+
+app.get('/events', async (req, res) => {
+  try {
+    res.send(events);
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 app.listen(4005, () => {
